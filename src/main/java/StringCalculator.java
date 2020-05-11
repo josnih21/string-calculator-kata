@@ -18,21 +18,10 @@ public class StringCalculator {
 
         String[] numbers = text.split(",");
         List<String> numbersList = Arrays.asList(numbers);
-        List<Double> numbersListParsed = numbersList.stream()
-                .map(s -> Double.parseDouble(s))
-                .collect(Collectors.toList());
         int sum = 0;
-        sum += addNumbers(numbersListParsed);
-        return sum;
-    }
-
-    public static double addNumbers(List<Double> numbers) {
-        if (numbers.size() == 1) {
-            return numbers.get(0);
+        for (String number : numbersList) {
+            sum += Integer.parseInt(number);
         }
-        double sum = 0;
-        sum += numbers.get(0);
-        numbers.remove(0);
-        return sum += addNumbers(numbers);
+        return sum;
     }
 }
