@@ -50,8 +50,8 @@ public class StringCalculatorShould {
     }
     @Test
     public void return_error_message_when_negative_numbers_provided(){
-        assertThat(StringCalculator.add("-1,2,3")).isEqualTo("Negative numbers not allowed : -1.0,");
-        assertThat(StringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0,");
+        assertThat(StringCalculator.add("-1,2,3")).isEqualTo("Negative numbers not allowed : -1.0");
+        assertThat(StringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0");
     }
 
 }
