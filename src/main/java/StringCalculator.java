@@ -12,22 +12,24 @@ public class StringCalculator {
             return 0;
         }
         boolean doesntContainsComma = !text.contains(",");
-        boolean doesntContainsNewLines = !text.contains("\n");
-        if (doesntContainsComma && doesntContainsNewLines) {
+        if (doesntContainsComma && !text.contains("\n")) {
             return Double.parseDouble(text);
         }
 
         if (text.contains("//")) {
-            delimiter = text.charAt(2) + "";
-            String replacedText = text.replaceAll("//.\n", "");
-            numbers = replacedText.split("[.\\n]");
+            delimiter = text.substring(2,text.indexOf("\n"));
+            System.out.println(delimiter);
+            String replacedText = text.replaceAll("//+"+delimiter+"\n", "");
+            numbers = replacedText.split("["+delimiter+"\\n]");
+            System.out.println(Arrays.toString(numbers));
         } else {
-            numbers = text.split(",|\\n");
+            numbers = text.split(delimiter+"|\\n");
+            System.out.println(Arrays.toString(numbers));
         }
 
         List<String> numbersList = Arrays.asList(numbers);
         List<Double> numbersListParsed = numbersList.stream()
-                .map(s -> Double.parseDouble(s))
+                .map(Double::parseDouble)
                 .collect(Collectors.toList());
         int sum = 0;
         sum += addNumbers(numbersListParsed);
