@@ -20,17 +20,28 @@ public class StringCalculator {
             return "Negative numbers not allowed : " + negativeNumbers(numbersListParsed);
         }
         float sum = 0;
-        sum += addNumbers(numbersListParsed);
+        sum += operateWithNumbers(numbersListParsed,Operation.ADDITION);
         return sum + "";
     }
 
-    private static double addNumbers(List<Float> numbers) {
+    private static double operateWithNumbers(List<Float> numbers,Operation operation) {
         if (numbers.size() == 1) { return numbers.get(0); }
         float sum = 0;
-        sum += numbers.get(0);
-        numbers.remove(0);
-        return sum += addNumbers(numbers);
+        switch (operation){
+            case ADDITION:
+                sum += numbers.get(0);
+                numbers.remove(0);
+                sum += operateWithNumbers(numbers,operation);
+                break;
+            case MULTIPLICATION:
+                sum = 1;
+                sum *= numbers.get(0);
+                numbers.remove(0);
+                sum *= operateWithNumbers(numbers, operation);
+        }
+        return sum;
     }
+
 
     private static String negativeNumbers(List<Float> numbers) {
         List<Float> negativeList = numbers.stream().filter(x -> x < 0).collect(Collectors.toList());

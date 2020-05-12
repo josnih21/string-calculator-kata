@@ -52,4 +52,8 @@ public class StringCalculatorShould {
         assertThat(StringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0");
     }
 
+    @Test void return_result_of_multiplicate_provided_values(){
+        assertThat(StringCalculator.add("1,2")).isEqualTo("2.0");
+    }
+
 }
