@@ -62,8 +62,14 @@ public class StringCalculatorShould {
         assertThat(stringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0");
     }
 
-    @Test void return_result_of_multiplicate_provided_values(){
+    @Test
+    public void return_result_of_multiplicate_provided_values(){
         assertThat(stringCalculator.add("1,2")).isEqualTo("2.0");
+    }
+
+    @Test
+    public void return_error_when_malformed_string(){
+        assertThat(stringCalculator.add("//|\n1|2,3")).isEqualTo("'|' expected but ',' found at position 3");
     }
 
 }
