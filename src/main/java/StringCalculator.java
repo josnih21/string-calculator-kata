@@ -53,7 +53,7 @@ public class StringCalculator {
             String replacedText = text.replaceAll("//+" + delimiter + "\n", "");
             return replacedText.split("[" + delimiter + "\\n]");
         } else {
-            return text.split(delimiter + "|\\n");
+            return text.split("[,\\n]");
         }
     }
 }
