@@ -6,10 +6,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StringCalculatorShould {
     /*/
         TO-DO LIST
-        - Empty string --> "";
-        - "1" --> 1;
-        - "3,2" --> 5;
-        - check separator with more than one character of lenght
+        - Empty string --> ""; - done
+        - "1" --> 1; - done
+        - "3,2" --> 5; - done
+        - check separator with more than one character of lenght - done
+        - check custom separator "//;\n1;2;3;" - done
+        - check negative numbers - done
+        - check number expected "1,,2" - done
+        - check error when separator got more than one char
+        - check multiple operations
      */
     StringCalculator stringCalculator = null;
 
@@ -58,17 +63,21 @@ public class StringCalculatorShould {
 
     @Test
     public void return_error_message_when_negative_numbers_provided() {
-        assertThat(stringCalculator.add("-1,2,3")).isEqualTo("Negative numbers not allowed : -1.0");
-        assertThat(stringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0");
+        assertThat(stringCalculator.add("-1,2,3")).isEqualTo("Negative numbers not allowed : -1.0\n");
+        assertThat(stringCalculator.add("-2,3,4,-5")).isEqualTo("Negative numbers not allowed : -2.0,-5.0\n");
     }
 
     @Test
     //@Disabled
     public void return_multiple_error_messages() {
-        assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative numbers not allowed : -1.0\nNumber expected but ',' found at position 2.");
-        assertThat(stringCalculator.add("-1,2,,-3")).isEqualTo("Negative numbers not allowed : -1.0,-3.0\nNumber expected but ',' found at position 4.");
+        assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative numbers not allowed : -1.0\nNumber expected but ',' found at position 3.");
+        assertThat(stringCalculator.add("-1,2,,-3,4,5")).isEqualTo("Negative numbers not allowed : -1.0,-3.0\nNumber expected but ',' found at position 5.");
     }
 
+    @Test
+    public void return_error_number_expected(){
+        assertThat(stringCalculator.add("1,2,,3")).isEqualTo("Number expected but ',' found at position 4.");
+    }
     @Test
     @Disabled
     public void return_result_of_multiplicate_provided_values() {

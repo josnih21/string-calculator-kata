@@ -3,11 +3,10 @@ import java.util.stream.Collectors;
 
 
 public class StringCalculator {
-    static String delimiter = ",";
+    String delimiter = ",";
 
     public String add(String text) {
-        String[] numbers;
-        String errorMessage="";
+        String errorMessage = "";
         if (text.isEmpty()) {
             return "0";
         }
@@ -18,21 +17,36 @@ public class StringCalculator {
         if (text.endsWith(delimiter)) {
             return "Number expected but EOF found";
         }
-        if(text.contains(",,")){
-            errorMessage += "\nNumber expected but ',' found at position "+text.indexOf(",,")+".";
+        if (text.contains(",,")) {
+            int indexOfNumber = text.lastIndexOf(",,") + 1;
+            errorMessage += "Number expected but ',' found at position " + indexOfNumber + ".";
             text = text.replaceAll(",,", ",");
         }
-        numbers = splittedArrayOfValues(text);
-        List<String> numbersList = Arrays.asList(numbers);
-        List<Float> numbersListParsed = numbersList.stream()
-                .map(Float::parseFloat)
-                .collect(Collectors.toList());
-        if (!negativeNumbers(numbersListParsed).isEmpty()) {
-            return "Negative numbers not allowed : " + negativeNumbers(numbersListParsed)+errorMessage;
+        String[] numbers = splittedArrayOfValues(text);
+        List<Float> numbersListParsed = parseListOfString(numbers);
+        String errors = handleError(errorMessage, numbersListParsed);
+        if (errors != null) {
+            return errors;
         }
         float sum = 0;
         sum += operateWithNumbers(numbersListParsed, Operation.ADDITION);
         return sum + "";
+    }
+
+    private List<Float> parseListOfString(String[] numbers) {
+        List<String> numbersList = Arrays.asList(numbers);
+        return numbersList.stream()
+                .map(Float::parseFloat)
+                .collect(Collectors.toList());
+    }
+
+    private String handleError(String errorMessage, List<Float> numbersListParsed) {
+        if (!negativeNumbers(numbersListParsed).isEmpty()) {
+            return "Negative numbers not allowed : " + negativeNumbers(numbersListParsed) + "\n" + errorMessage;
+        } else if (!errorMessage.isEmpty()) {
+            return errorMessage;
+        }
+        return null;
     }
 
     private double operateWithNumbers(List<Float> numbers, Operation operation) {
@@ -63,8 +77,8 @@ public class StringCalculator {
     private String[] splittedArrayOfValues(String text) {
         if (text.contains("//")) {
             delimiter = text.substring(2, text.indexOf("\n"));
-            String replacedText = text.replaceAll("//+" + delimiter + "\n", "");
-            return replacedText.split("[" + delimiter + "\\n]");
+            text = text.replaceAll("//+" + delimiter + "\n", "");
+            return text.split("[" + delimiter + "\\n]");
         } else {
             return text.split("[,\\n]");
         }
