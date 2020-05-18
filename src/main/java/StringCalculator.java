@@ -7,39 +7,35 @@ public class StringCalculator {
 
     public String add(String text) {
         String[] numbers;
+        String errorMessage="";
         if (text.isEmpty()) {
             return "0";
         }
         boolean doesntContainsComma = !text.contains(",");
-        boolean doesntContainsNewLines = !text.contains("\n");
-        if (doesntContainsComma && doesntContainsNewLines) {
+        if (doesntContainsComma && !text.contains("\n")) {
             return Float.parseFloat(text) + "";
         }
         if (text.endsWith(delimiter)) {
             return "Number expected but EOF found";
         }
-        return operateWithNumbers(text);
-    }
-
-    private String operateWithNumbers(String text) {
-        String [] numbers = splittedArrayOfValues(text);
-        List<Float> numbersListParsed = parseList(numbers);
+        if(text.contains(",,")){
+            errorMessage += "\nNumber expected but ',' found at position "+text.indexOf(",,")+".";
+            text = text.replaceAll(",,", ",");
+        }
+        numbers = splittedArrayOfValues(text);
+        List<String> numbersList = Arrays.asList(numbers);
+        List<Float> numbersListParsed = numbersList.stream()
+                .map(Float::parseFloat)
+                .collect(Collectors.toList());
         if (!negativeNumbers(numbersListParsed).isEmpty()) {
-            return "Negative numbers not allowed : " + negativeNumbers(numbersListParsed);
+            return "Negative numbers not allowed : " + negativeNumbers(numbersListParsed)+errorMessage;
         }
         float sum = 0;
-        sum += addWithRecursion(numbersListParsed, Operation.ADDITION);
+        sum += operateWithNumbers(numbersListParsed, Operation.ADDITION);
         return sum + "";
     }
 
-    private List<Float> parseList(String[] numbers) {
-        List<String> numbersList = Arrays.asList(numbers);
-        return numbersList.stream()
-                .map(Float::parseFloat)
-                .collect(Collectors.toList());
-    }
-
-    private double addWithRecursion(List<Float> numbers, Operation operation) {
+    private double operateWithNumbers(List<Float> numbers, Operation operation) {
         if (numbers.size() == 1) {
             return numbers.get(0);
         }
@@ -48,13 +44,13 @@ public class StringCalculator {
             case ADDITION:
                 sum += numbers.get(0);
                 numbers.remove(0);
-                sum += addWithRecursion(numbers, operation);
+                sum += operateWithNumbers(numbers, operation);
                 break;
             case MULTIPLICATION:
                 sum = 1;
                 sum *= numbers.get(0);
                 numbers.remove(0);
-                sum *= addWithRecursion(numbers, operation);
+                sum *= operateWithNumbers(numbers, operation);
         }
         return sum;
     }

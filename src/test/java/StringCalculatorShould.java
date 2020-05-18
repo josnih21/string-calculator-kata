@@ -63,9 +63,10 @@ public class StringCalculatorShould {
     }
 
     @Test
-    @Disabled
+    //@Disabled
     public void return_multiple_error_messages() {
-        assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative numbers not allowed : -1\nNumber expected but ',' found at position 3.");
+        assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative numbers not allowed : -1.0\nNumber expected but ',' found at position 2.");
+        assertThat(stringCalculator.add("-1,2,,-3")).isEqualTo("Negative numbers not allowed : -1.0,-3.0\nNumber expected but ',' found at position 4.");
     }
 
     @Test
